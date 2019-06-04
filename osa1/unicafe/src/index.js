@@ -5,11 +5,34 @@ const Headers = props => <h1>{props.text}</h1>
 
 const Display = props => <div>{props.text} {props.value}</div>
 
+const Presentage = (props) => {
+  return(
+    <div>
+        {props.text} {props.good * 100 / (props.good + props.neutral + props.bad)} %
+    </div>
+  )
+}
+
 const Button = (props) => (
     <button onClick={props.handleClick}>
       {props.text}
     </button>
   )
+
+const Statistics = (props) => {
+  return(
+    <div>
+        <Headers text={'statistics'} />
+        <Display text={'good'} value={props.good} />
+        <Display text={'neutral'} value={props.neutral} />
+        <Display text={'bad'} value={props.bad} />
+        <Display text={'all'} value={props.good + props.neutral + props.bad} />
+        <Display text={'average'} value={
+            (props.good - props.bad) / (props.good + props.neutral + props.bad)} />
+        <Presentage text={'positive'} good={props.good} neutral={props.neutral} bad={props.bad} />
+    </div>
+  )
+}
 
 const App = () => {
   // tallenna napit omaan tilaansa
@@ -35,11 +58,7 @@ const App = () => {
       <Button handleClick={() => handleGood()} text="good" />
       <Button handleClick={() => handleNeutral()} text="neutral" />
       <Button handleClick={() => handleBad()} text="bad" />
-      <Headers text={'statistics'} />
-      <Display text={'good'} value={good} />
-      <Display text={'neutral'} value={neutral} />
-      <Display text={'bad'} value={bad} />
-
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
