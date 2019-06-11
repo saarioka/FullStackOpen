@@ -3,19 +3,27 @@ import React, { useState } from 'react'
 const App = () => {
   
   const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    {
+      name: 'Arto Hellas',
+      number: ''
+    }
   ])
 
-const rows = () =>
-  persons.map(person => <li key={person.name}>{person.name}</li>)
+  const rows = () =>
+    persons.map(person => <li key={person.name}>{person.name} {person.number}</li>)
 
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
 
-  const addNumber = (event) => {
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
+
+  const addContact = (event) => {
     event.preventDefault()
     if(persons.filter(person => person.name === newName).length > 0)
     {
@@ -23,16 +31,21 @@ const rows = () =>
     }
     else
     {
-      setPersons(persons.concat({name : newName}))
+      setPersons(persons.concat(
+                    {
+                      name : newName,
+                      number : newNumber
+                    }
+                ))
     }
     setNewName('')
-    console.log(persons)
+    setNewNumber('')
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addNumber}>
+      <form onSubmit={addContact}>
         <div>
           name:
           <input 
@@ -41,6 +54,11 @@ const rows = () =>
           />
         </div>
         <div>
+          number:
+          <input 
+            value={newNumber}
+            onChange={handleNumberChange}
+          />
           <button type="submit">add</button>
         </div>
       </form>
