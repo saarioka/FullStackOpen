@@ -3,17 +3,19 @@ import React, { useState } from 'react'
 const App = () => {
   
   const [ persons, setPersons] = useState([
-    {
-      name: 'Arto Hellas',
-      number: ''
-    }
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ])
 
-  const rows = () =>
-    persons.map(person => <li key={person.name}>{person.name} {person.number}</li>)
-
+  const [ newFilter, setNewFilter ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+
+  const handleFilterChange = (event) => {
+    setNewFilter(event.target.value)
+  }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -32,19 +34,30 @@ const App = () => {
     else
     {
       setPersons(persons.concat(
-                    {
-                      name : newName,
-                      number : newNumber
-                    }
-                ))
+                    { name : newName, number : newNumber }))
     }
     setNewName('')
     setNewNumber('')
   }
 
+  const personsToShow = newFilter === ''
+    ? persons
+    : persons.filter(person => person.name.toLowerCase()
+             .includes(newFilter.toLowerCase()))
+
+  const rows = () =>
+    personsToShow.map(person => <li key={person.name}>{person.name} {person.number}</li>)
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+          filter shown with 
+          <input 
+            value={newFilter}
+            onChange={handleFilterChange}
+          />
+      </div>
       <form onSubmit={addContact}>
         <div>
           name:
