@@ -92,7 +92,9 @@ const App = () => {
         personService
         .update(match[0].id, personObject)
         .then(() => {
-          personService.getAll().then(response => {
+          personService
+          .getAll()
+          .then(response => {
             setPersons(response.data)
             setNewName('')
             setNewNumber('')
