@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = (props) => {
   return (
@@ -69,16 +69,12 @@ const App = () => {
   }
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled')
         setPersons(response.data)
       })
-  }, [])
-  console.log('render', persons.length, 'persons')
-
+}, [])
 
   const addContact = (event) => {
     event.preventDefault()
@@ -97,14 +93,15 @@ const App = () => {
         //important: Math.random() > 0.5,
       }
 
-      axios
-      .post('http://localhost:3001/persons', personObject)
+      personService
+      .create(personObject)
       .then(response => {
-        console.log(response)
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
       })
     }
-    setNewName('')
-    setNewNumber('')
+
   }
 
   return (
