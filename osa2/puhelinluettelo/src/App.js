@@ -50,11 +50,24 @@ const Persons = ({filter, persons, remove}) => {
   )
 }
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={message.successful ? "success" : "error"}>
+      {message.text}
+    </div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([])
   const [ newFilter, setNewFilter ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const handleFilterChange = (event) => {
     setNewFilter(event.target.value)
@@ -100,6 +113,10 @@ const App = () => {
             setNewNumber('')
           })
         })
+        setErrorMessage({ text : `Edited ${newName}`, successful : true})
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 2000)
       }
     }
     else{
@@ -112,6 +129,10 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+      setErrorMessage({ text : `Added ${newName}`, successful : true})
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 2000)
     }
   }
 
@@ -122,12 +143,18 @@ const App = () => {
       .then(() => {
         setPersons(persons.filter(p => p.id !== personObject.id))
       })
+      setErrorMessage({ text : `Removed ${personObject.name}`, successful : true})
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 2000)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={errorMessage}/>
 
       <Filter value = {newFilter} onChange={handleFilterChange} />
 
