@@ -78,20 +78,30 @@ const App = () => {
 
   const addContact = (event) => {
     event.preventDefault()
-    if(persons.filter(person => person.name === newName).length > 0)
-    {
-      alert(`${newName} is already added to phonebook`)
+
+    const personObject = {
+      name: newName,
+      number: newNumber,
     }
-    else
-    {
-      setPersons(persons.concat({ name : newName, number : newNumber }))
-      
-      const personObject = {
-        name: newName,
-        number: newNumber,
-        //date: new Date().toISOString(),
-        //important: Math.random() > 0.5,
+
+    const match = persons.filter(person => person.name === newName)
+
+    if(match.length > 0){
+      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
+        
+        personService
+        .update(match[0].id, personObject)
+        .then(() => {
+          personService.getAll().then(response => {
+            setPersons(response.data)
+            setNewName('')
+            setNewNumber('')
+          })
+        })
       }
+    }
+    else{
+      setPersons(persons.concat({ name : newName, number : newNumber }))
 
       personService
       .create(personObject)
@@ -112,7 +122,6 @@ const App = () => {
       })
     }
   }
-
 
   return (
     <div>
