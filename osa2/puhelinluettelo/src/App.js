@@ -101,7 +101,6 @@ const App = () => {
 
     if(match.length > 0){
       if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
-        
         personService
         .update(match[0].id, personObject)
         .then(() => {
@@ -113,15 +112,23 @@ const App = () => {
             setNewNumber('')
           })
         })
+        .catch(() => {
+          setErrorMessage({ text : `Person '${newName}' was already removed from server`,
+                            successful : false })
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 3000)
+          setPersons(persons.filter(p => p.id !== personObject.id))
+        })
+        
         setErrorMessage({ text : `Edited ${newName}`, successful : true})
         setTimeout(() => {
           setErrorMessage(null)
-        }, 2000)
+        }, 3000)
       }
     }
     else{
       setPersons(persons.concat({ name : newName, number : newNumber }))
-
       personService
       .create(personObject)
       .then(response => {
@@ -132,7 +139,7 @@ const App = () => {
       setErrorMessage({ text : `Added ${newName}`, successful : true})
       setTimeout(() => {
         setErrorMessage(null)
-      }, 2000)
+      }, 3000)
     }
   }
 
@@ -146,7 +153,7 @@ const App = () => {
       setErrorMessage({ text : `Removed ${personObject.name}`, successful : true})
       setTimeout(() => {
         setErrorMessage(null)
-      }, 2000)
+      }, 3000)
     }
   }
 
