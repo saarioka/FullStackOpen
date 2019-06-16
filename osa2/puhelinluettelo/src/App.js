@@ -88,8 +88,20 @@ const App = () => {
     }
     else
     {
-      setPersons(persons.concat(
-                    { name : newName, number : newNumber }))
+      setPersons(persons.concat({ name : newName, number : newNumber }))
+      
+      const personObject = {
+        name: newName,
+        number: newNumber,
+        //date: new Date().toISOString(),
+        //important: Math.random() > 0.5,
+      }
+
+      axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        console.log(response)
+      })
     }
     setNewName('')
     setNewNumber('')
