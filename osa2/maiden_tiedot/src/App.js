@@ -4,26 +4,18 @@ import axios from 'axios'
 const Filter = (props) => {
   return (
     <div>
-          find countries 
-          <input 
-            value={props.value}
-            onChange={props.onChange}
-          />
+      find countries 
+      <input 
+        value={props.value}
+        onChange={props.onChange}
+      />
     </div>
   )
 }
 
-const Countries = ({filter, countries, show}) => {
-  const countriesToShow = filter === ''
-    ? countries
-    : countries.filter(country => country.name.toLowerCase()
-               .includes(filter.toLowerCase()))
+const Countries = ({filter, countries, setFilter}) => {
 
-  if(countriesToShow.length > 10){
-    return "Too many matches, specify another filter"
-  }
-  else if(countriesToShow.length === 1){
-    const match = countriesToShow[0]
+  const showMatch = (match) => {
     return(
       <div>
         <h2>{match.name}</h2>
@@ -41,15 +33,29 @@ const Countries = ({filter, countries, show}) => {
         </ul>
         <img 
           src={match.flag}
+          alt="flag"
           height="100"
         />
       </div>
     )
   }
+
+  const countriesToShow = filter === ''
+    ? countries
+    : countries.filter(country => country.name.toLowerCase()
+               .includes(filter.toLowerCase()))
+
+  if(countriesToShow.length > 10){
+    return "Too many matches, specify another filter"
+  }
+  else if(countriesToShow.length === 1){
+    const match = countriesToShow[0]
+    return showMatch(match)
+  }
   return(
     countriesToShow.map(country =>
     <li key={country.name}>
-      {country.name} {country.number} <button onClick={() => show(country)}>show</button>
+      {country.name} <button onClick={() => setFilter(country.name)}>show</button>
     </li>
     )
   )
@@ -74,7 +80,7 @@ const App = () => {
   return (
     <div>
       <Filter value = {newFilter} onChange={handleFilterChange} />
-      <Countries filter={newFilter} countries={countries}/>
+      <Countries filter={newFilter} countries={countries} setFilter={setNewFilter}/>
     </div>
   )
 
